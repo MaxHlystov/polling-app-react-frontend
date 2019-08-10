@@ -37,7 +37,7 @@ class VotePoll extends React.Component {
         }
         let options = votesCount.map(vote => {
             let item = vote.pollItem;
-            let percent = Math.round(vote.total / totalVotes * 100).toString() + "%"
+            let percent = Math.round(vote.total / totalVotes * 100).toString() + "%";
             return (
                 <div>
                     <input className="m-1" type="radio"

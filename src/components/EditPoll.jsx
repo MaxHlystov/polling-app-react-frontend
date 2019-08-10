@@ -16,7 +16,7 @@ class EditPoll extends React.Component {
         this.props.onSubmit(this.state);
     }
 
-    handleClose(e) {
+    handleClose() {
         this.props.onCancel();
     }
 
