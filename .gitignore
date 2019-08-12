@@ -20,6 +20,7 @@
 *.code-workspace
 .vscode
 .idea
+*.iml
 
 npm-debug.log*
 yarn-debug.log*
