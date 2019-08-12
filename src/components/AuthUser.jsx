@@ -1,6 +1,12 @@
 import React from "react";
 import PropTypes from 'prop-types';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
+const API_HEADERS = {
+    'Content-Type': 'application/json',
+};
+
 class AuthUser extends React.Component {
     constructor(props) {
         super(props);
@@ -21,11 +27,9 @@ class AuthUser extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        fetch('http://localhost:8080/auth?userName=' + this.state.userName, {
+        fetch(`${API_URL}/auth?userName=${this.state.userName}`, {
             method: "POST",
-            headers: {
-                'Accept': 'application/json'
-            },
+            headers: API_HEADERS,
         }).then((response) => {
             response.json().then(
                 (user) => {
