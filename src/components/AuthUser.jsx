@@ -14,47 +14,44 @@ class AuthUser extends React.Component {
             userName: getUserName(props.user)
             , error: undefined
         };
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    handleChange(event) {
-        this.setState({
-            userName: event.target.value
-            , error: undefined
-        });
-    }
-
-    handleSubmit(event) {
-        event.preventDefault();
-        fetch(`${API_URL}/auth?userName=${this.state.userName}`, {
-            method: "POST",
-            headers: API_HEADERS,
-        }).then((response) => {
-            response.json().then(
-                (user) => {
-                    this.props.onUserAuth(user);
-                },
-                (error) => {
-                    this.setState({
-                        error: error.message
-                    });
-                }
-            )
-        }).catch(error => {
+        this.handleChange = (event) => {
             this.setState({
-                error: error.message
+                userName: event.target.value
+                , error: undefined
             });
-        });
+        };
+        this.handleSubmit = (event) => {
+            event.preventDefault();
+            fetch(`${API_URL}/auth?userName=${this.state.userName}`, {
+                method: "POST",
+                headers: API_HEADERS,
+            }).then((response) => {
+                response.json().then(
+                    (user) => {
+                        this.props.onUserAuth(user);
+                    },
+                    (error) => {
+                        this.setState({
+                            error: error.message
+                        });
+                    }
+                )
+            }).catch(error => {
+                this.setState({
+                    error: error.message
+                });
+            });
+        };
     }
 
     render() {
+        let {error, userName} = this.state;
         let errorComponent;
-        if (this.state.error !== undefined) {
+        if (error !== undefined) {
             errorComponent = (
                 <div>
                     <h4>Error retrieving authentication.</h4>
-                    {this.state.error}
+                    {error}
                 </div>
             );
         }
@@ -66,7 +63,7 @@ class AuthUser extends React.Component {
                         User name
                         <input type="text"
                                className="m-2"
-                               value={this.state.userName}
+                               value={userName}
                                onChange={this.handleChange}/>
                     </label>
                     <input className="m-2" type="submit" value="Authorize"/>
