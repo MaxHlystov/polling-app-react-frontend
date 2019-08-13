@@ -3,7 +3,7 @@ import update from 'react-addons-update';
 import PropTypes from 'prop-types';
 import PollsList from "./PollsList";
 import PollForm from "./PollForm";
-import AddPollComponent from "./AddPollComponent";
+import AddingPollComponent from "./AddingPollComponent";
 import EditPoll from "./EditPoll";
 import VotePoll from "./VotePoll";
 import ErrorComponent from "./ErrorComponent";
@@ -188,9 +188,9 @@ class PollsListContainer extends React.Component {
                                   deletePoll={this.deletePoll.bind(this)}/>;
                 break;
             case RouteStates.AddPoll:
-                return <AddPollComponent user={this.state.user}
-                                         onSubmit={this.addPoll.bind(this)}
-                                         onCancel={this.handleEditorCancel.bind(this)}/>;
+                return <AddingPollComponent user={this.state.user}
+                                            onSubmit={this.addPoll.bind(this)}
+                                            onCancel={this.handleEditorCancel.bind(this)}/>;
                 break;
             case RouteStates.EditPoll:
                 return <EditPoll user={this.state.user}
