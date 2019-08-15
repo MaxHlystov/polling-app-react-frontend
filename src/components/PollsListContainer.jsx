@@ -85,7 +85,7 @@ class PollsListContainer extends React.Component {
     startVotePoll(pollId) {
         let poll = this.getPoll(pollId);
         if (poll !== undefined) {
-            fetch(`${API_URL}//votes?userId=${this.props.user.id}&pollId=${pollId}`,
+            fetch(`${API_URL}/votes?userId=${this.props.user.id}&pollId=${pollId}`,
                 {method: "GET",})
                 .then((response) => {
                         if (!response.ok) {
