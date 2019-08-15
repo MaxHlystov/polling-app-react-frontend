@@ -1,4 +1,5 @@
 # Web-poll application frontend
+Backend see [here](https://github.com/MaxHlystov/polling-app-kotlin)
 
 ## User Story:
 
