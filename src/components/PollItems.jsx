@@ -19,10 +19,9 @@ class PollItems extends Component {
 
     render() {
         let items = this.props.items.map((item) => (
-            <li>
+            <li key={item.id}>
                 <input className="form-control m-1"
                        type="text"
-                       key={item.id}
                        name={'option_' + item.id}
                        value={item.title}
                        onChange={this.handleChange.bind(this, item.id)}

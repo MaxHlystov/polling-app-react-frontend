@@ -2,7 +2,7 @@ import React from "react";
 import PollForm from "./PollForm";
 import PropTypes from "prop-types";
 
-class AddPollComponent extends React.Component {
+class AddingPollComponent extends React.Component {
     componentWillMount() {
         this.setState({
             id: undefined,
@@ -39,9 +39,9 @@ class AddPollComponent extends React.Component {
     }
 }
 
-AddPollComponent.propTypes = {
+AddingPollComponent.propTypes = {
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired
 };
 
-export default AddPollComponent;
+export default AddingPollComponent;

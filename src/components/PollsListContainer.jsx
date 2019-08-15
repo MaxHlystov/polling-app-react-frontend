@@ -3,7 +3,7 @@ import update from 'react-addons-update';
 import PropTypes from 'prop-types';
 import PollsList from "./PollsList";
 import PollForm from "./PollForm";
-import AddPollComponent from "./AddPollComponent";
+import AddingPollComponent from "./AddingPollComponent";
 import EditPoll from "./EditPoll";
 import VotePoll from "./VotePoll";
 import ErrorComponent from "./ErrorComponent";
@@ -21,6 +21,27 @@ class PollsListContainer extends React.Component {
             isLoaded: false,
             routeState: RouteStates.PollList
         };
+
+        this.changeOption = (voteId) => {
+            let votesCount = this.state.votesCount;
+            let unsetIndex = votesCount.findIndex((vote) => vote.selectedByUser);
+            let setIndex = votesCount.findIndex((vote) => vote.pollItem.id === voteId);
+            let query = {};
+            if (unsetIndex >= 0) {
+                query[unsetIndex] = {
+                    selectedByUser: {$set: false},
+                    total: {$apply: (v) => v - 1},
+                };
+            }
+            if (setIndex >= 0) {
+                query[setIndex] = {
+                    selectedByUser: {$set: true},
+                    total: {$apply: (v) => v + 1},
+                };
+            }
+            let newVotesCount = update(votesCount, query);
+            this.setState({voteId: voteId, votesCount: newVotesCount})
+        }
     }
 
     componentDidMount() {
@@ -64,7 +85,7 @@ class PollsListContainer extends React.Component {
     startVotePoll(pollId) {
         let poll = this.getPoll(pollId);
         if (poll !== undefined) {
-            fetch(`${API_URL}//votes?userId=${this.props.user.id}&pollId=${pollId}`,
+            fetch(`${API_URL}/votes?userId=${this.props.user.id}&pollId=${pollId}`,
                 {method: "GET",})
                 .then((response) => {
                         if (!response.ok) {
@@ -75,9 +96,15 @@ class PollsListContainer extends React.Component {
                     }
                 )
                 .then((votesCount) => {
+                    let itemIndex = votesCount.findIndex((vote) => vote.selectedByUser);
+                    let voteId;
+                    if (itemIndex >= 0) {
+                        voteId = votesCount[itemIndex].pollItem.id
+                    }
                     this.setState({
                         routeState: RouteStates.Vote,
                         poll: poll,
+                        voteId: voteId,
                         votesCount: votesCount,
                     });
                 })
@@ -145,9 +172,7 @@ class PollsListContainer extends React.Component {
     deletePoll(pollId) {
         let prevState = this.state;
         let pollIndex = this.state.polls.findIndex((poll) => poll.id === pollId);
-        let newPolls = update(this.state, {
-            polls: {$splice: [[pollIndex, 1]]}
-        });
+        let newPolls = update(this.state.polls, {$splice: [[pollIndex, 1]]});
         fetch(`${API_URL}/polls?userId=${this.props.user.id}&&pollId=${pollId}`, {method: "DELETE"})
             .then((response) => {
                     if (!response.ok) {
@@ -188,9 +213,9 @@ class PollsListContainer extends React.Component {
                                   deletePoll={this.deletePoll.bind(this)}/>;
                 break;
             case RouteStates.AddPoll:
-                return <AddPollComponent user={this.state.user}
-                                         onSubmit={this.addPoll.bind(this)}
-                                         onCancel={this.handleEditorCancel.bind(this)}/>;
+                return <AddingPollComponent user={this.state.user}
+                                            onSubmit={this.addPoll.bind(this)}
+                                            onCancel={this.handleEditorCancel.bind(this)}/>;
                 break;
             case RouteStates.EditPoll:
                 return <EditPoll user={this.state.user}
@@ -201,7 +226,9 @@ class PollsListContainer extends React.Component {
             case RouteStates.Vote:
                 return <VotePoll user={this.state.user}
                                  poll={this.state.poll}
+                                 voteId={this.state.voteId}
                                  votesCount={this.state.votesCount}
+                                 onChangeOption={this.changeOption.bind(this)}
                                  onVote={this.votePoll.bind(this)}
                                  onCancel={this.handleEditorCancel.bind(this)}/>;
                 break;
