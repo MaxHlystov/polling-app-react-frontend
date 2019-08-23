@@ -20,7 +20,7 @@ class AuthUser extends React.Component {
         };
         this.handleChange = (event) => {
             this.setState({
-                userName: event.target.value
+                [event.target.name]: event.target.value
                 , error: undefined
             });
         };
@@ -80,21 +80,25 @@ class AuthUser extends React.Component {
                         User name
                         <input type="text"
                                className="m-2"
+                               name="userName"
                                value={userName}
                                onChange={this.handleChange}/>
                     </label>
-                    <input className="m-2" type="submit" value="Authorize"/>
+                    <br/>
                     <label className="m-2">
                         E-mail
                         <input type="text"
                                className="m-2"
+                               name="email"
                                value={email}
                                onChange={this.handleChange}/>
                     </label>
+                    <br/>
                     <label className="m-2">
                         Password
                         <input type="password"
                                className="m-2"
+                               name="password"
                                value={password}
                                onChange={this.handleChange}/>
                     </label>
