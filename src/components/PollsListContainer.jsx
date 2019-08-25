@@ -45,7 +45,7 @@ class PollsListContainer extends React.Component {
     }
 
     componentDidMount() {
-        fetch(`${API_URL}/polls`,
+        fetch("/polls",
             {
                 method: "GET",
                 headers: API_HEADERS
@@ -91,7 +91,7 @@ class PollsListContainer extends React.Component {
     startVotePoll(pollId) {
         let poll = this.getPoll(pollId);
         if (poll !== undefined) {
-            fetch(`${API_URL}/votes?pollId=${pollId}`,
+            fetch(`/votes?pollId=${pollId}`,
                 {method: "GET",})
                 .then((response) => {
                         if (!response.ok) {
@@ -138,7 +138,7 @@ class PollsListContainer extends React.Component {
 
     sendPoll(poll, method, newState) {
         let prevState = this.state;
-        fetch(`${API_URL}/polls`, {
+        fetch(`/polls`, {
             method: method,
             body: JSON.stringify(poll),
             headers: API_HEADERS
@@ -160,7 +160,7 @@ class PollsListContainer extends React.Component {
     }
 
     votePoll(pollId, itemId) {
-        fetch(`${API_URL}/votes?pollId=${pollId}&option=${itemId}`,
+        fetch(`/votes?pollId=${pollId}&option=${itemId}`,
             {method: "POST"})
             .then((response) => {
                     if (!response.ok) {
@@ -179,7 +179,7 @@ class PollsListContainer extends React.Component {
         let prevState = this.state;
         let pollIndex = this.state.polls.findIndex((poll) => poll.id === pollId);
         let newPolls = update(this.state.polls, {$splice: [[pollIndex, 1]]});
-        fetch(`${API_URL}/polls?&pollId=${pollId}`, {method: "DELETE"})
+        fetch(`/polls?&pollId=${pollId}`, {method: "DELETE"})
             .then((response) => {
                     if (!response.ok) {
                         throw new Error("Server response wasn't OK");

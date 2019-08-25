@@ -1,8 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types';
 
-const bcrypt = require('bcryptjs');
-
 const API_URL = process.env.REACT_APP_API_URL;
 
 const API_HEADERS = {
@@ -25,7 +23,7 @@ class LoginComponent extends React.Component {
         };
         this.handleSubmit = (event) => {
             event.preventDefault();
-            fetch(`${API_URL}/login`,
+            fetch("/login", //`${API_URL}/login`,
                 {
                     method: "POST",
                     headers: API_HEADERS,
@@ -44,15 +42,6 @@ class LoginComponent extends React.Component {
                     error: error.message
                 });
             });
-            /*bcrypt.genSalt(10).then((salt) => {
-                bcrypt.hash(this.state.password, salt).then((hash) => {
-
-                })
-            }).catch((error) => {
-                this.setState({
-                    error: error.message
-                });
-            });*/
         };
     }
 

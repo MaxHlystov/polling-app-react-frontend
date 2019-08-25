@@ -29,7 +29,7 @@ class SubmitUserComponent extends React.Component {
             bcrypt.genSalt(10).then((salt) => {
                 bcrypt.hash(this.state.password, salt).then((hash) => {
                     const email = this.state.email === "" ? "" : `&email=${this.state.email}`;
-                    fetch(`${API_URL}/submit?userName=${this.state.userName}&password=${hash}${email}`,
+                    fetch(`/submit?userName=${this.state.userName}&password=${hash}${email}`,
                         {
                             method: "POST",
                             headers: API_HEADERS,
