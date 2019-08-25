@@ -6,15 +6,14 @@ const bcrypt = require('bcryptjs');
 const API_URL = process.env.REACT_APP_API_URL;
 
 const API_HEADERS = {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
 };
 
-class AuthUser extends React.Component {
+class LoginComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             userName: getUserName(props.user),
-            email: getEmail(props.user),
             password: "",
             error: undefined,
         };
@@ -26,38 +25,34 @@ class AuthUser extends React.Component {
         };
         this.handleSubmit = (event) => {
             event.preventDefault();
-            bcrypt.genSalt(10)
-                .then((err, salt) => {
-                    if (err === undefined) {
-                        return bcrypt.hash(this.state.user.password, salt);
-                    }
+            fetch(`${API_URL}/login`,
+                {
+                    method: "POST",
+                    headers: API_HEADERS,
+                    body: `username=${this.state.userName}&password=${this.state.password}`,
+                }).then((response) => {
+                response.json().then(
+                    (user) => {
+                        this.props.onUserAuth(user);
+                    }).catch((error) => {
+                    this.setState({
+                        error: error.message
+                    });
                 })
-                .then((err, hash) => {
-                    if (err === undefined) {
-                        const email = this.state.email === "" ? "" : `&email=${this.state.email}`;
-                        return fetch(`${API_URL}/auth?userName=${this.state.userName}&password=${hash}${email}`,
-                            {
-                                method: "POST",
-                                headers: API_HEADERS,
-                            })
-                    }
-                })
-                .then((response) => {
-                    response.json().then(
-                        (user) => {
-                            this.props.onUserAuth(user);
-                        },
-                        (error) => {
-                            this.setState({
-                                error: error.message
-                            });
-                        }
-                    )
-                }).catch(error => {
+            }).catch((error) => {
                 this.setState({
                     error: error.message
                 });
             });
+            /*bcrypt.genSalt(10).then((salt) => {
+                bcrypt.hash(this.state.password, salt).then((hash) => {
+
+                })
+            }).catch((error) => {
+                this.setState({
+                    error: error.message
+                });
+            });*/
         };
     }
 
@@ -74,7 +69,7 @@ class AuthUser extends React.Component {
         }
         return (
             <div className="auth-user">
-                <h3>Please enter user name to authorize</h3>
+                <h3>Please, enter user name and password to login.</h3>
                 <form onSubmit={this.handleSubmit}>
                     <label className="m-2">
                         User name
@@ -86,15 +81,6 @@ class AuthUser extends React.Component {
                     </label>
                     <br/>
                     <label className="m-2">
-                        E-mail
-                        <input type="text"
-                               className="m-2"
-                               name="email"
-                               value={email}
-                               onChange={this.handleChange}/>
-                    </label>
-                    <br/>
-                    <label className="m-2">
                         Password
                         <input type="password"
                                className="m-2"
@@ -102,7 +88,7 @@ class AuthUser extends React.Component {
                                value={password}
                                onChange={this.handleChange}/>
                     </label>
-                    <input className="m-2" type="submit" value="Authorize"/>
+                    <input className="m-2" type="submit" value="Login"/>
                 </form>
                 {errorComponent}
             </div>
@@ -127,14 +113,13 @@ function getEmail(user) {
     return undefined
 }
 
-AuthUser.propTypes = {
+LoginComponent.propTypes = {
     user: PropTypes.shape({
         id: PropTypes.string.isRequired,
         name: PropTypes.array.isRequired,
-        email: PropTypes.string,
         password: PropTypes.string.isRequired,
     }),
     onUserAuth: PropTypes.func.isRequired,
 };
 
-export default AuthUser;
+export default LoginComponent;

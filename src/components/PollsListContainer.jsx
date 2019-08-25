@@ -17,7 +17,7 @@ class PollsListContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            error: null,
+            error: undefined,
             isLoaded: false,
             routeState: RouteStates.PollList
         };
@@ -45,7 +45,7 @@ class PollsListContainer extends React.Component {
     }
 
     componentDidMount() {
-        fetch(`${API_URL}/polls?userId=${this.props.user.id}`,
+        fetch(`${API_URL}/polls`,
             {
                 method: "GET",
                 headers: API_HEADERS
@@ -63,7 +63,13 @@ class PollsListContainer extends React.Component {
                         isLoaded: true,
                         error: error.message
                     });
-                }));
+                }))
+            .catch((error) => {
+                this.setState({
+                    isLoaded: true,
+                    error: error.message
+                });
+            });
 
     }
 
@@ -85,7 +91,7 @@ class PollsListContainer extends React.Component {
     startVotePoll(pollId) {
         let poll = this.getPoll(pollId);
         if (poll !== undefined) {
-            fetch(`${API_URL}/votes?userId=${this.props.user.id}&pollId=${pollId}`,
+            fetch(`${API_URL}/votes?pollId=${pollId}`,
                 {method: "GET",})
                 .then((response) => {
                         if (!response.ok) {
@@ -134,7 +140,7 @@ class PollsListContainer extends React.Component {
         let prevState = this.state;
         fetch(`${API_URL}/polls`, {
             method: method,
-            body: JSON.stringify({userId: this.props.user.id, poll: poll}),
+            body: JSON.stringify(poll),
             headers: API_HEADERS
         })
             .then((response) => {
@@ -154,7 +160,7 @@ class PollsListContainer extends React.Component {
     }
 
     votePoll(pollId, itemId) {
-        fetch(`${API_URL}/votes?userId=${this.props.user.id}&pollId=${pollId}&option=${itemId}`,
+        fetch(`${API_URL}/votes?pollId=${pollId}&option=${itemId}`,
             {method: "POST"})
             .then((response) => {
                     if (!response.ok) {
@@ -173,7 +179,7 @@ class PollsListContainer extends React.Component {
         let prevState = this.state;
         let pollIndex = this.state.polls.findIndex((poll) => poll.id === pollId);
         let newPolls = update(this.state.polls, {$splice: [[pollIndex, 1]]});
-        fetch(`${API_URL}/polls?userId=${this.props.user.id}&&pollId=${pollId}`, {method: "DELETE"})
+        fetch(`${API_URL}/polls?&pollId=${pollId}`, {method: "DELETE"})
             .then((response) => {
                     if (!response.ok) {
                         throw new Error("Server response wasn't OK");
@@ -191,7 +197,7 @@ class PollsListContainer extends React.Component {
         const {error, isLoaded} = this.state;
         let errorComponent;
         if (error) {
-            errorComponent = <ErrorComponent message={"Ошибка: " + error}/>;
+            return <ErrorComponent message={"Ошибка: " + error}/>;
         } else if (!isLoaded) {
             return <div>Загрузка...</div>;
         }

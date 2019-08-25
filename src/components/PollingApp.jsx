@@ -1,5 +1,5 @@
 import React from "react";
-import AuthUser from "./AuthUser";
+import LoginComponent from "./LoginComponent";
 import PollsListContainer from "./PollsListContainer";
 
 class PollingApp extends React.Component {
@@ -17,7 +17,7 @@ class PollingApp extends React.Component {
     render() {
         let childComponent;
         if (this.state.user === undefined) {
-            childComponent = <AuthUser user={this.state.user} onUserAuth={this.handleUserAuth.bind(this)}/>;
+            childComponent = <LoginComponent user={this.state.user} onUserAuth={this.handleUserAuth.bind(this)}/>;
         } else {
             childComponent = <PollsListContainer user={this.state.user}/>;
         }
