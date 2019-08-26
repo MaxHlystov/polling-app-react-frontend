@@ -8,7 +8,6 @@ import EditPoll from "./EditPoll";
 import VotePoll from "./VotePoll";
 import ErrorComponent from "./ErrorComponent";
 
-const API_URL = process.env.REACT_APP_API_URL;
 const API_HEADERS = {
     'Content-Type': 'application/json',
 };
@@ -56,7 +55,6 @@ class PollsListContainer extends React.Component {
                         isLoaded: true,
                         polls: polls
                     });
-
                 },
                 (error) => {
                     this.setState({

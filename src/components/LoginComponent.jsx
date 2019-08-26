@@ -1,8 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types';
 
-const API_URL = process.env.REACT_APP_API_URL;
-
 const API_HEADERS = {
     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
 };
@@ -31,7 +29,14 @@ class LoginComponent extends React.Component {
                 }).then((response) => {
                 response.json().then(
                     (user) => {
-                        this.props.onUserAuth(user);
+                        if (user.error === undefined) {
+                            this.props.onUserAuth(user);
+                        } else {
+                            this.setState({
+                                error: user.message
+                            });
+                        }
+
                     }).catch((error) => {
                     this.setState({
                         error: error.message
