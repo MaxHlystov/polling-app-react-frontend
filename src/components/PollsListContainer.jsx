@@ -7,7 +7,9 @@ import AddingPollComponent from "./AddingPollComponent";
 import EditPoll from "./EditPoll";
 import VotePoll from "./VotePoll";
 import ErrorComponent from "./ErrorComponent";
+require('dotenv').config();
 
+const API_URL = process.env.REACT_APP_API_URL;
 const API_HEADERS = {
     'Content-Type': 'application/json',
 };
@@ -44,7 +46,7 @@ class PollsListContainer extends React.Component {
     }
 
     componentDidMount() {
-        fetch("/polls",
+        fetch(`${API_URL}/polls`,
             {
                 method: "GET",
                 headers: API_HEADERS
@@ -89,7 +91,7 @@ class PollsListContainer extends React.Component {
     startVotePoll(pollId) {
         let poll = this.getPoll(pollId);
         if (poll !== undefined) {
-            fetch(`/votes?pollId=${pollId}`,
+            fetch(`${API_URL}/votes?pollId=${pollId}`,
                 {method: "GET",})
                 .then((response) => {
                         if (!response.ok) {
@@ -136,7 +138,7 @@ class PollsListContainer extends React.Component {
 
     sendPoll(poll, method, newState) {
         let prevState = this.state;
-        fetch(`/polls`, {
+        fetch(`${API_URL}/polls`, {
             method: method,
             body: JSON.stringify(poll),
             headers: API_HEADERS
@@ -158,7 +160,7 @@ class PollsListContainer extends React.Component {
     }
 
     votePoll(pollId, itemId) {
-        fetch(`/votes?pollId=${pollId}&option=${itemId}`,
+        fetch(`${API_URL}/votes?pollId=${pollId}&option=${itemId}`,
             {method: "POST"})
             .then((response) => {
                     if (!response.ok) {
@@ -177,7 +179,7 @@ class PollsListContainer extends React.Component {
         let prevState = this.state;
         let pollIndex = this.state.polls.findIndex((poll) => poll.id === pollId);
         let newPolls = update(this.state.polls, {$splice: [[pollIndex, 1]]});
-        fetch(`/polls?&pollId=${pollId}`, {method: "DELETE"})
+        fetch(`${API_URL}/polls?&pollId=${pollId}`, {method: "DELETE"})
             .then((response) => {
                     if (!response.ok) {
                         throw new Error("Server response wasn't OK");

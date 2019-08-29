@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from 'prop-types';
+require('dotenv').config();
 
+const API_URL = process.env.REACT_APP_API_URL;
 const API_HEADERS = {
     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
 };
@@ -21,7 +23,7 @@ class LoginComponent extends React.Component {
         };
         this.handleSubmit = (event) => {
             event.preventDefault();
-            fetch("/login", //`${API_URL}/login`,
+            fetch(`${API_URL}/login`,
                 {
                     method: "POST",
                     headers: API_HEADERS,

@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from 'prop-types';
+require('dotenv').config();
 
 const bcrypt = require('bcryptjs');
 
 const API_URL = process.env.REACT_APP_API_URL;
-
 const API_HEADERS = {
     'Content-Type': 'application/json',
 };
@@ -29,7 +29,7 @@ class SubmitUserComponent extends React.Component {
             bcrypt.genSalt(10).then((salt) => {
                 bcrypt.hash(this.state.password, salt).then((hash) => {
                     const email = this.state.email === "" ? "" : `&email=${this.state.email}`;
-                    fetch(`/submit?userName=${this.state.userName}&password=${hash}${email}`,
+                    fetch(`${API_URL}/submit?userName=${this.state.userName}&password=${hash}${email}`,
                         {
                             method: "POST",
                             headers: API_HEADERS,
