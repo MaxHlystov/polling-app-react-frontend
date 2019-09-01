@@ -53,10 +53,17 @@ class PollsListContainer extends React.Component {
             })
             .then(res => res.json().then(
                 (polls) => {
-                    this.setState({
-                        isLoaded: true,
-                        polls: polls
-                    });
+                    if(polls.error !== undefined) {
+                        this.setState({
+                            isLoaded: true,
+                            error: polls.message
+                    }   );
+                    } else {
+                        this.setState({
+                            isLoaded: true,
+                            polls: polls
+                        });
+                    }
                 },
                 (error) => {
                     this.setState({
