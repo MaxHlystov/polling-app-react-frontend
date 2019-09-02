@@ -28,9 +28,10 @@ class LoginComponent extends React.Component {
                     method: "POST",
                     headers: API_HEADERS,
                     body: `username=${this.state.userName}&password=${this.state.password}`,
-                }).then((response) => {
-                response.json().then(
-                    (user) => {
+                })
+            .then((response) => {
+                if(response.status == 200) {
+                    response.json().then((user) => {
                         if (user.error === undefined) {
                             this.props.onUserAuth(user);
                         } else {
@@ -38,17 +39,11 @@ class LoginComponent extends React.Component {
                                 error: user.message
                             });
                         }
-
-                    }).catch((error) => {
-                    this.setState({
-                        error: error.message
-                    });
-                })
-            }).catch((error) => {
-                this.setState({
-                    error: error.message
-                });
-            });
+                    }).catch((error) => { this.setState({ error: error.message }); })
+                }
+                else { this.setState({ error: response.statusText }); }
+            })
+            .catch((error) => { this.setState({ error: error.message }); });
         };
     }
 
