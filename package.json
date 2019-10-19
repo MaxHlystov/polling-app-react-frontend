@@ -39,6 +39,6 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "dotenv": "^8.1.0",
     "eslint-utils": ">=1.4.1"
-  },
-  "proxy": "http://localhost:8080/"
+  }
+
 }
